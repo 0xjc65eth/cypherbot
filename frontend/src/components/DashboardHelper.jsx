@@ -35,8 +35,40 @@ const DashboardHelper = () => {
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Low Balance Mode Alert */}
-            {mode?.isActive && (
+            {/* MODE ALERT: ULTRA vs LOW BALANCE */}
+            {mode?.mode === 'ULTRA_AGGRESSIVE_12H' ? (
+                <div className="col-span-3 bg-purple-600/10 border border-purple-500/30 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 blur-3xl rounded-full"></div>
+
+                    <div className="flex items-center gap-4 z-10">
+                        <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center animate-pulse shadow-[0_0_15px_rgba(147,51,234,0.5)]">
+                            <span className="text-2xl">🔥</span>
+                        </div>
+                        <div>
+                            <h4 className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 text-lg">
+                                ULTRA MODE: ${mode.target} CHALLENGE
+                            </h4>
+                            <div className="flex items-center gap-2 text-xs text-purple-200">
+                                <span className="bg-purple-500/20 px-2 py-0.5 rounded text-purple-300 border border-purple-500/30">20x LEVERAGE</span>
+                                <span className="bg-pink-500/20 px-2 py-0.5 rounded text-pink-300 border border-pink-500/30">HF SCALPING</span>
+                                <span>Time Left: {Math.floor(mode.timeLeft / 3600)}h {Math.floor((mode.timeLeft % 3600) / 60)}m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-1 w-full md:w-auto px-4 z-10">
+                        <div className="flex justify-between text-xs mb-1 text-gray-300">
+                            <span>Progress</span>
+                            <span className="font-mono text-pink-400">{mode.progress}% (${portfolio?.marginSummary?.accountValue || 0} / ${mode.target})</span>
+                        </div>
+                        <div className="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+                            <div className="bg-gradient-to-r from-purple-600 to-pink-500 h-2.5 rounded-full transition-all duration-1000 relative" style={{ width: `${mode.progress}%` }}>
+                                <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : mode?.isActive && (
                 <div className="col-span-3 bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-3 h-3 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_red]"></div>

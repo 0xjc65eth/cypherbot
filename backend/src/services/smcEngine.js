@@ -19,11 +19,20 @@ class SMC10xEngine {
         return null; // Not tradable
     }
 
-    /**
-     * Calculate Position Size
-     * Respects Low Balance Mode ($11 test) or Standard 10x System
-     */
     calculatePositionSize(totalBalance) {
+        // Check Ultra Mode First
+        const ultraMode = require('./ultraMode');
+        const ultra = ultraMode.check(totalBalance);
+
+        if (ultra.isActive) {
+            return {
+                sizeUsd: ultra.entryMargin * ultra.leverage,
+                leverage: ultra.leverage,
+                isUltraMode: true,
+                config: ultra
+            };
+        }
+
         const lowBalanceMode = require('./lowBalanceMode');
         const mode = lowBalanceMode.check(totalBalance);
 
@@ -41,7 +50,8 @@ class SMC10xEngine {
         return {
             sizeUsd: entrySize, // Standard sizing (assuming 1x leverage base calculation for now)
             leverage: 1,
-            isLowBalance: false
+            isLowBalance: false,
+            isUltraMode: false
         };
     }
 

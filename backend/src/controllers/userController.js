@@ -82,14 +82,20 @@ exports.getPortfolio = async (req, res) => {
         }
 
         // Check Mode
+        const ultraMode = require('../services/ultraMode');
         const lowBalanceMode = require('../services/lowBalanceMode');
+
         const accountValue = parseFloat(portfolio?.marginSummary?.accountValue || 0);
-        const modeCheck = lowBalanceMode.check(accountValue);
+
+        let modeCheck = ultraMode.check(accountValue);
+        if (!modeCheck.isActive) {
+            modeCheck = lowBalanceMode.check(accountValue);
+        }
 
         res.json({
             user_id: id,
             portfolio: portfolio,
-            mode: modeCheck // Send mode info to frontend
+            mode: modeCheck
         });
 
     } catch (error) {

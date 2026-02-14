@@ -61,7 +61,7 @@ function App() {
                         </button>
                     </div>
                 ) : (
-                    <DashboardHelper />
+                    <BrokerDashboard />
                 )}
             </main>
         </div>

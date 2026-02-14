@@ -77,10 +77,18 @@ class Main24x7Loop {
             return;
         }
 
-        // 2. Analyze Market (Simplified: check a few assets or rely on WS signals)
-        // For now, we iterate a subset of assets to save API calls/Compute
-        // In production, this would be event-driven by WS updates
-        const assetsToAnalyze = ['BTC', 'ETH', 'SOL'];
+        // 2. Analyze Market
+        // Ultra Mode Strategy: Scan all or top volume
+        const dummyBal = 15; // TODO: Get from DB user sum
+        const ultra = ultraMode.check(dummyBal);
+
+        let assetsToAnalyze = ['BTC', 'ETH', 'SOL'];
+        if (ultra.isActive && this.activeAssets.length > 0) {
+            // In ultra mode, we might scan top 20 by volume or random subset to be fast
+            // For demo, we take top 10 from the active list
+            assetsToAnalyze = this.activeAssets.slice(0, 20);
+            console.log(`🚀 Ultra Mode: Scanning ${assetsToAnalyze.length} assets`);
+        }
 
         for (const symbol of assetsToAnalyze) {
             // Get price (mock or from cache)
